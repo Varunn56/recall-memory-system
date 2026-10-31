@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RECALL – Student Memory Prediction System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <h1>RECALL</h1>
+            <p class="subtitle">Student Memory Retention & Revision Classifier (Spring Boot + Weka ML)</p>
+        </div>
+    </header>
+
+    <main class="container grid-container">
+        <section class="card form-card">
+            <h2>Student Study Parameters</h2>
+            <form id="predictionForm">
+                <div class="form-group">
+                    <label for="studyMinutes">Study Duration (Minutes):</label>
+                    <input type="number" id="studyMinutes" name="studyMinutes" min="1" max="720" value="60" required>
+                    <small>Range: 1 – 720 minutes</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="daysSinceRevision">Days Since Last Revision:</label>
+                    <input type="number" id="daysSinceRevision" name="daysSinceRevision" min="0" max="365" value="3" required>
+                    <small>Range: 0 – 365 days</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="prevRevisions">Number of Previous Revisions:</label>
+                    <input type="number" id="prevRevisions" name="prevRevisions" min="0" max="50" value="2" required>
+                    <small>Range: 0 – 50 times</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="practiceSessions">Practice Sessions / Questions Solved:</label>
+                    <input type="number" id="practiceSessions" name="practiceSessions" min="0" max="200" value="10" required>
+                    <small>Range: 0 – 200 sessions</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="quizScore">Previous Quiz Score (%):</label>
+                    <input type="number" step="0.1" id="quizScore" name="quizScore" min="0" max="100" value="75.0" required>
+                    <small>Range: 0.0 – 100.0%</small>
+                </div>
+
+                <button type="submit" id="predictBtn" class="btn btn-primary">Predict Revision Need</button>
+            </form>
+            <div id="formError" class="alert error hidden"></div>
+        </section>
+
+        <section class="card result-card">
+            <h2>Inference Result</h2>
+            <div id="resultPlaceholder" class="placeholder-text">
+                Enter input values and click <strong>Predict Revision Need</strong>.
+            </div>
+
+            <div id="resultContent" class="hidden">
+                <div id="badgeContainer" class="badge"></div>
+                <h3 id="recommendationText" class="recommendation"></h3>
+
+                <div class="probability-bars">
+                    <div class="bar-group">
+                        <div class="bar-label">
+                            <span>High Recall Probability</span>
+                            <span id="highProbText">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div id="highProbBar" class="bar-fill high-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="bar-group">
+                        <div class="bar-label">
+                            <span>Low Recall Probability</span>
+                            <span id="lowProbText">0%</span>
+                        </div>
+                        <div class="bar-track">
+                            <div id="lowProbBar" class="bar-fill low-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="confidence-box">
+                    <strong>Model Confidence:</strong> <span id="confidenceText"></span>
+                    <p id="explanationText" class="explanation-note"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card metrics-card full-width">
+            <div class="metrics-header">
+                <h2>Model Architecture & Validation Metrics</h2>
+                <button type="button" id="refreshMetricsBtn" class="btn btn-secondary">Refresh</button>
+            </div>
+            
+            <p id="datasetNotice" class="dataset-notice"></p>
+
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <span class="metric-title">Overall Accuracy</span>
+                    <span id="metricAccuracy" class="metric-value">--</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-title">Error Rate</span>
+                    <span id="metricError" class="metric-value">--</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-title">Validation Strategy</span>
+                    <span id="metricValidation" class="metric-value">--</span>
+                </div>
+            </div>
+
+            <h3>Class-Wise Detailed Metrics</h3>
+            <table class="data-table" id="classMetricsTable">
+                <thead>
+                    <tr>
+                        <th>Class Label</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1-Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h3>Confusion Matrix</h3>
+            <div id="confusionMatrixContainer"></div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>RECALL ML Engine &copy; 2026. Built with Spring Boot 3 & Weka Machine Learning Library.</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
